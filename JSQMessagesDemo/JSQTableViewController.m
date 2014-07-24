@@ -18,6 +18,14 @@
 
 #import "JSQTableViewController.h"
 
+@interface JSQTableViewController ()
+
+@property (nonatomic, strong) JSQDemoViewController *reuseDemoViewController;
+@property (nonatomic, strong) NSArray *conversation1Array;
+@property (nonatomic, strong) NSArray *conversation2Array;
+
+@end
+
 @implementation JSQTableViewController
 
 #pragma mark - View lifecycle
@@ -38,7 +46,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -72,6 +80,16 @@
                 break;
             case 1:
                 cell.textLabel.text = @"Modal programmatically";
+                break;
+        }
+    }
+    else if (indexPath.section == 2) {
+        switch (indexPath.row) {
+            case 0:
+                cell.textLabel.text = @"Programmatically reuse 6 messages";
+                break;
+            case 1:
+                cell.textLabel.text = @"Programmatically reuse 1 message";
                 break;
         }
     }
@@ -116,6 +134,17 @@
                 break;
         }
     }
+    else if (indexPath.section == 2) {
+        switch (indexPath.row) {
+            case 0:
+                self.reuseDemoViewController.messages = [self.conversation1Array mutableCopy];
+                break;
+            case 1:
+                self.reuseDemoViewController.messages = [self.conversation2Array mutableCopy];
+                break;
+        }
+        [self.navigationController pushViewController:self.reuseDemoViewController animated:YES];
+    }
 }
 
 #pragma mark - Segues
@@ -136,6 +165,40 @@
 - (void)didDismissJSQDemoViewController:(JSQDemoViewController *)vc
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Properties
+
+- (JSQDemoViewController *)reuseDemoViewController
+{
+    if (!_reuseDemoViewController) {
+        _reuseDemoViewController = [JSQDemoViewController messagesViewController];
+    }
+    return _reuseDemoViewController;
+}
+
+- (NSArray *)conversation1Array
+{
+    if (![_conversation1Array count]) {
+        _conversation1Array = [[NSArray alloc] initWithObjects:
+                               [[JSQMessage alloc] initWithText:@"There are 6 messages in this conversation" sender:@"Jesse Squires" date:[NSDate distantPast]],
+                               [[JSQMessage alloc] initWithText:@"It is simple, elegant, and easy to use. There are super sweet default settings, but you can customize like crazy." sender:@"Steve Wozniak" date:[NSDate distantPast]],
+                               [[JSQMessage alloc] initWithText:@"It even has data detectors. You can call me tonight. My cell number is 123-456-7890. My website is www.hexedbits.com." sender:@"Jesse Squires" date:[NSDate distantPast]],
+                               [[JSQMessage alloc] initWithText:@"JSQMessagesViewController is nearly an exact replica of the iOS Messages App. And perhaps, better." sender:@"Jobs" date:[NSDate date]],
+                               [[JSQMessage alloc] initWithText:@"It is unit-tested, free, and open-source." sender:@"Tim Cook" date:[NSDate date]],
+                               [[JSQMessage alloc] initWithText:@"Oh, and there's sweet documentation." sender:@"Jesse Squires" date:[NSDate date]],
+                               nil];
+    }
+    return _conversation1Array;
+}
+
+- (NSArray *)conversation2Array
+{
+    if (![_conversation2Array count]) {
+        _conversation2Array = [[NSArray alloc] initWithObjects:
+                               [[JSQMessage alloc] initWithText:@"This is the only message" sender:@"Jesse Squires" date:[NSDate distantPast]],nil];
+    }
+    return _conversation2Array;
 }
 
 @end

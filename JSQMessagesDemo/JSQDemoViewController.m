@@ -115,7 +115,7 @@ static NSString * const kJSQDemoAvatarNameWoz = @"Steve Wozniak";
     
     self.sender = @"Jesse Squires";
     
-    [self setupTestModel];
+    //[self setupTestModel];
     
     /**
      *  Remove camera button since media messages are not yet implemented
@@ -456,6 +456,14 @@ static NSString * const kJSQDemoAvatarNameWoz = @"Steve Wozniak";
                 header:(JSQMessagesLoadEarlierHeaderView *)headerView didTapLoadEarlierMessagesButton:(UIButton *)sender
 {
     NSLog(@"Load earlier messages!");
+}
+
+#pragma - mark Properties
+
+- (void)setMessages:(NSMutableArray *)messages
+{
+    _messages = messages;
+    [self.collectionView reloadData];
 }
 
 @end
